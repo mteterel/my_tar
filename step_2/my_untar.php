@@ -68,7 +68,7 @@ function unpack_archive(string $archive, bool $compressed, string $out_dir)
                     {
                         $should_overwrite = userinput_overwrite_file("unknown");
                         if ($should_overwrite == "Y" || $should_overwrite == "A")
-                            tar_unpack_single($stream, $offset, true);
+                            tar_unpack_single($stream, $offset, $out_dir, true);
                         $dupe_action = $should_overwrite;
                     }
             }
