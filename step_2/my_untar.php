@@ -30,7 +30,7 @@ function parse_args(int $argc, array $argv)
     return $program_opts;
 }
 
-function unpack_file(string $archive, string $out_dir)
+function unpack_archive(string $archive, bool $compressed, string $out_dir)
 {
     if (!file_exists($archive))
     {
@@ -40,6 +40,9 @@ function unpack_file(string $archive, string $out_dir)
 
     echo "Opening archive $archive ...\n";
     $stream = file_get_contents($archive);
+
+    if ($compressed)
+        $stream = gzdecode($stream);
 
     $dupe_action = null;
     $offset = 0;
@@ -99,7 +102,7 @@ function main(int $argc, array $argv)
     $opts = parse_args($argc, $argv);
     $archive_name = $opts["in_file"];
 
-    if (!unpack_file($archive_name, $opts["out_dir"]))
+    if (!unpack_archive($archive_name, $opts["compressed"], $opts["out_dir"]))
     {
         echo "Error while extracting archive $archive_name";
         return false;
