@@ -8,6 +8,7 @@ $dcomp = gzuncompress($data);
 var_dump($dcomp);
 $dcomp_file = fopen("./test3","w");
 $my_file = fwrite($dcomp_file,$dcomp);
+fclose($dcomp_file);
 
 }
 
