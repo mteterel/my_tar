@@ -25,10 +25,15 @@ function tar_pack_single(string &$stream, string $file)
     }
 }
 
-function tar_write_padding(string &$stream, $block_len)
+function tar_calc_padding_size(int $block_len)
 {
-    $padding_size = $block_len % 512;
-    $stream .= str_repeat("\x00", 512 - $padding_size);
+    return 512 - $block_len % 512;
+}
+
+function tar_write_padding(string &$stream, int $block_len)
+{
+    $padding_size = tar_calc_padding_size($block_len);
+    $stream .= str_repeat("\x00", $padding_size);
 }
 
 function tar_generate_header_p1(string $file)
@@ -80,22 +85,70 @@ function tar_write_header(string &$stream, $file)
 
 function tar_read_header(string &$stream, int &$offset)
 {
-    $part1 = unpack("a100a8a8a8a12a12", $stream, $offset);
+    $part1 = @unpack("a100name/a8mode/a8uid/a8gid/a12size/a12mtime",
+        $stream, $offset);
     if (false == $part1)
         return false;
 
     $offset += 148 + 8; // Skip checksum
 
-    $part2 = unpack("a1a100a6a2a32a32a8a8a155a12", $stream, $offset);
+    $part2 = @unpack("a1/a100a6a2a32a32a8a8a155a12", $stream, $offset);
     if (false == $part2)
         return false;
 
-    return true;
+    $offset += 356;
+    return array_merge($part1, $part2);
 }
 
-function tar_read_single(int &$offset)
+function tar_unpack_single(string &$stream, int &$offset, bool $force = false)
 {
-    //$parse_header = tar_read_header($stream, &$offset);
+    if ($stream[$offset+1] == "\x00")
+    {
+        return 1337;
+    }
+
+    $orig_offset = $offset;
+    $read_header = tar_read_header($stream, $offset);
+
+    if (false == $read_header)
+    {
+        echo "Failed to read header of file\n";
+        return false;
+    }
+
+    $orig_name = trim($read_header["name"]);
+    $dest_name = "/tmp/wacrush2/" . $orig_name;
+
+    if (file_exists($dest_name) && !$force)
+    {
+        var_dump($dest_name);
+        $offset = $orig_offset;
+        return -2;
+    }
+
+    $file_size = intval(trim($read_header["size"]), 8);
+    $file_content = substr($stream, $offset, $file_size);
+
+    if (false == $file_content)
+    {
+        echo "Missing data for file $orig_name\n";
+        return false;
+    }
+
+    $offset += $file_size;
+    $padding_size = tar_calc_padding_size($offset - $orig_offset);
+
+    if (strlen($stream) < $offset + $padding_size)
+    {
+        echo "Data for file $dest_name is present, but there is no padding afterwards.\n";
+        return false;
+    }
+
+    $offset += $padding_size;
+    file_put_contents($dest_name, $file_content);
+
+    echo "Extracted file $dest_name\n";
+    return true;
 }
 
 function tar_calc_header_crc(string $part1, string $part2)
