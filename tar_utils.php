@@ -144,10 +144,21 @@ function tar_unpack_single(string &$stream, int &$offset, string $out_dir, bool 
     }
 
     $offset += $padding_size;
+    prepare_directories($dest_name);
     file_put_contents($dest_name, $file_content);
 
     echo "Extracted file $dest_name\n";
     return true;
+}
+
+function prepare_directories(string $path)
+{
+    $slash_pos = strrpos($path, '/');
+    if ($slash_pos !== false)
+    {
+        $path = substr($path, 0, $slash_pos);
+        mkdir($path, 777, true);
+    }
 }
 
 function tar_calc_header_crc(string $part1, string $part2)
