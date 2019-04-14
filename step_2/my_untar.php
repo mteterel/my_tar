@@ -1,17 +1,17 @@
 <?php
 
-require_once(dirname(__FILE__).'/../tar_utils.php');
-require_once(dirname(__FILE__).'/../cli_utils.php');
+require_once(dirname(__FILE__) . '/../tar_utils.php');
+require_once(dirname(__FILE__) . '/../cli_utils.php');
 
 function parse_args(int $argc, array $argv)
 {
     $program_opts = [
         "compressed" => false,
         "out_dir" => "/tmp/wacrush2/",
-        "in_file" => "output.tar"
+        "in_file" => "output.mytar"
     ];
 
-    for($i = 1; $i < $argc; ++$i)
+    for ($i = 1; $i < $argc; ++$i)
     {
         switch ($argv[$i])
         {
@@ -57,7 +57,7 @@ function unpack_archive(string $archive, bool $compressed, string $out_dir)
         }
         elseif ($unpack_res === -2)
         {
-            switch($dupe_action)
+            switch ($dupe_action)
             {
                 case "A":
                     tar_unpack_single($stream, $offset, $out_dir, true);
@@ -78,7 +78,7 @@ function unpack_archive(string $archive, bool $compressed, string $out_dir)
             echo "End of file reached. Extracting complete.\n";
             break;
         }
-    } while(true);
+    } while (true);
 
     return true;
 }

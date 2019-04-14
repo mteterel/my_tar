@@ -22,8 +22,7 @@ function userinput_overwrite_file(string $filename)
         }
         else
             return $uinput;
-    }
-    while($uinput == null);
+    } while ($uinput == null);
 
     return false;
 }

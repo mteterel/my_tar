@@ -102,7 +102,7 @@ function tar_read_header(string &$stream, int &$offset)
 
 function tar_unpack_single(string &$stream, int &$offset, string $out_dir, bool $force = false)
 {
-    if ($stream[$offset+1] == "\x00")
+    if ($stream[$offset + 1] == "\x00")
     {
         return 1337;
     }
@@ -165,13 +165,13 @@ function tar_calc_header_crc(string $part1, string $part2)
 {
     $checksum = 0;
 
-    foreach(str_split($part1) as $c)
+    foreach (str_split($part1) as $c)
         $checksum += ord($c);
 
-    for($i = 0; $i < 8; ++$i)
+    for ($i = 0; $i < 8; ++$i)
         $checksum += ord(' ');
 
-    foreach(str_split($part2) as $c)
+    foreach (str_split($part2) as $c)
         $checksum += ord($c);
 
     return $checksum;

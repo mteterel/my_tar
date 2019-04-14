@@ -1,17 +1,17 @@
 <?php
 
-require_once(dirname(__FILE__).'/../cli_utils.php');
-require_once(dirname(__FILE__).'/../tar_utils.php');
+require_once(dirname(__FILE__) . '/../cli_utils.php');
+require_once(dirname(__FILE__) . '/../tar_utils.php');
 
 function parse_args(int $argc, array $argv)
 {
     $program_opts = [
         "compressed" => false,
-        "out_file" => "output.tar",
+        "out_file" => "output.mytar",
         "files" => []
     ];
 
-    for($i = 1; $i < $argc; ++$i)
+    for ($i = 1; $i < $argc; ++$i)
     {
         switch ($argv[$i])
         {
@@ -35,7 +35,7 @@ function pack_files(string &$stream, array $files)
     if (empty($files))
         return false;
 
-    foreach($files as $file)
+    foreach ($files as $file)
     {
         if (!file_exists($file))
             echo "File $file does not exist. Skipping over...\n";
