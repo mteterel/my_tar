@@ -100,7 +100,7 @@ function tar_read_header(string &$stream, int &$offset)
     return array_merge($part1, $part2);
 }
 
-function tar_unpack_single(string &$stream, int &$offset, bool $force = false)
+function tar_unpack_single(string &$stream, int &$offset, string $out_dir, bool $force = false)
 {
     if ($stream[$offset+1] == "\x00")
     {
@@ -117,11 +117,10 @@ function tar_unpack_single(string &$stream, int &$offset, bool $force = false)
     }
 
     $orig_name = trim($read_header["name"]);
-    $dest_name = "/tmp/wacrush2/" . $orig_name;
+    $dest_name = $out_dir . $orig_name;
 
     if (file_exists($dest_name) && !$force)
     {
-        var_dump($dest_name);
         $offset = $orig_offset;
         return -2;
     }

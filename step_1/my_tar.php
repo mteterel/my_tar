@@ -52,7 +52,7 @@ function pack_files(string &$stream, array $files)
 
 function display_help()
 {
-    echo "Usage : tar [-o FILE] [-z] file...\n";
+    echo "Usage : my_tar.php [-o FILE] [-z] file...\n";
     echo "-o FILE : Saves the archive as FILE\n";
     echo "-z : Compress the archive with Gzip\n";
 }
