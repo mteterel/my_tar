@@ -157,7 +157,7 @@ function prepare_directories(string $path)
     if ($slash_pos !== false)
     {
         $path = substr($path, 0, $slash_pos);
-        @mkdir($path, 777, true);
+        @mkdir($path, 0777, true);
     }
 }
 
