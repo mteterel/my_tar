@@ -117,7 +117,7 @@ function tar_unpack_single(string &$stream, int &$offset, string $out_dir, bool 
     }
 
     $orig_name = trim($read_header["name"]);
-    $dest_name = $out_dir . $orig_name;
+    $dest_name = $out_dir . '/' . $orig_name;
 
     if (file_exists($dest_name) && !$force)
     {
