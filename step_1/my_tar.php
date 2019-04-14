@@ -1,7 +1,7 @@
 <?php
 
-require_once("../cli_utils.php");
-require_once("../tar_utils.php");
+require_once(dirname(__FILE__).'/../cli_utils.php');
+require_once(dirname(__FILE__).'/../tar_utils.php');
 
 function parse_args(int $argc, array $argv)
 {
@@ -53,7 +53,7 @@ function pack_files(string &$stream, array $files)
 function display_help()
 {
     echo "Usage : tar [-o FILE] [-z] file...\n";
-    echo "-o FILE : Writes the archive in FILE\n";
+    echo "-o FILE : Saves the archive as FILE\n";
     echo "-z : Compress the archive with Gzip\n";
 }
 
