@@ -54,7 +54,7 @@ function display_help()
 {
     echo "Usage : my_tar.php [-o FILE] [-z] file...\n";
     echo "-o FILE : Saves the archive as FILE\n";
-    echo "-z : Compress the archive with Gzip\n";
+    echo "-z : Compress the archive with Bzip\n";
 }
 
 function main(int $argc, array $argv)
@@ -70,12 +70,12 @@ function main(int $argc, array $argv)
     $stream = "";
     if (false == pack_files($stream, $opts["files"]))
         return false;
-    $stream .= str_repeat("\x00", 1024);
+    tar_write_eof_padding($stream);
 
     if (true === $opts["compressed"])
     {
-        $opts["out_file"] .= ".gz";
-        $stream = gzencode($stream);
+        $opts["out_file"] .= ".bz2";
+        $stream = bzcompress($stream);
     }
 
     if (file_exists($opts["out_file"]))

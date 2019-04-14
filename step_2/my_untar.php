@@ -42,7 +42,7 @@ function unpack_archive(string $archive, bool $compressed, string $out_dir)
     $stream = file_get_contents($archive);
 
     if ($compressed)
-        $stream = gzdecode($stream);
+        $stream = bzdecompress($stream);
 
     $dupe_action = null;
     $offset = 0;
@@ -87,7 +87,7 @@ function display_help()
 {
     echo "Usage : my_untar.php [-o FILE] [-z] file\n";
     echo "-o PATH : Extracts in the directory PATH\n";
-    echo "-z : Notify that the archive is compressed with Gzip\n";
+    echo "-z : Notify that the archive is compressed with Bzip\n";
     echo "file : The archive to extract\n";
 }
 
